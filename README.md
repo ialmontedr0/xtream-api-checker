@@ -222,7 +222,13 @@ def validate_xtream_input(server, username, password):
 
     return True, None
 ```
-
+echo "# xtream-api-checker" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/ialmontedr0/xtream-api-checker.git
+git push -u origin main
 ---
 
 ## 🔹 FASE 7 — Bot (Handlers)
