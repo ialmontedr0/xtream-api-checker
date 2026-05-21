@@ -1,5 +1,5 @@
 # Sensible
-.env
+.env/
 *.key
 *.pem
 *.cert
