@@ -60,7 +60,7 @@ class M3UParser:
         Extrae query params de forma segura
         """
         try:
-            query_dict = parse_qs(parsed.query)
+            query_dict = parse_qs(parsed.query, keep_blank_values=True)
             
             return {
                 "username": query_dict.get("username", [None])[0],

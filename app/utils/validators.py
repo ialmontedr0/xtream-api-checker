@@ -1,6 +1,6 @@
 import re
 from urllib.parse import urlparse
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List, Dict
 
 
 # =========================
@@ -31,15 +31,7 @@ def detect_input_type(text: str) -> str:
 # =========================
 
 def sanitize_input(text: str) -> str:
-    """
-    Limpia input del usuario
-    """
-    return (
-        text.split()
-        .replace("\n")
-        .replace("\r")
-        .replace("\t")
-    )
+    return text.replace("\n", "").replace("\r", "").replace("\t", "").strip()
     
 # =========================
 # 🌐 VALIDACIÓN SERVIDOR
@@ -56,7 +48,7 @@ def validate_server_url(server: str) -> Tuple[bool, Optional[str]]:
             return False, "Servidor invalido (host vacio)"
         
         # evitar localhost / loopback (serguridad opcional)
-        if parsed.hostname in ("127.0.0.1", "localhoslt"):
+        if parsed.hostname in ("127.0.0.1", "localhost"):
             return False, "Servidor no permitido"
         
         return True, None
@@ -122,7 +114,7 @@ def parse_xtream_input(text: str) -> Tuple[Optional[str], Optional[str], Optiona
     """
     
     try:
-        parts = text.string().split()
+        parts = text.strip().split()
         
         if len(parts) != 3:
             return None, None, None
@@ -141,3 +133,37 @@ def is_m3u_url(text: str) -> bool:
 def is_xtream_format(text: str) -> bool:
     parts = text.split()
     return len(parts) == 3
+
+def is_batch_input(text: str) -> bool:
+    lines = [l.strip() for l in text.strip().split("\n") if l.strip()]
+    return len(lines) > 1
+
+def parse_batch_input(text: str) -> List[Dict[str, str]]:
+    lines = [l.strip() for l in text.strip().split("\n") if l.strip()]
+    entries = []
+    
+    for line in lines:
+        if "get.php" in line and "username" in line:
+            parsed = urlparse(line)
+            qs = urlparse(line).query
+            params = {}
+            for param in qs.split("&"):
+                if "=" in param:
+                    k, v = param.split("=", 1)
+                    params[k] = v
+            if "username" in params and "password" in params:
+                entries.append({
+                    "server": f"{parsed.scheme}://{parsed.netloc}",
+                    "username": params["username"],
+                    "password": params["password"]
+                })
+        else:
+            parts = line.split()
+            if len(parts) == 3:
+                entries.append({
+                    "server": parts[0],
+                    "username": parts[1],
+                    "password": parts[2]
+                })
+    
+    return entries

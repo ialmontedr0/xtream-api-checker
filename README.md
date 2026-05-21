@@ -289,7 +289,7 @@ async def handle_message(message: types.Message):
 ```
 
 ---
-
+Ahora avancemos al desarrollo completo, avanzado, profesional, funcional y sin omisiones del siguiente paso:
 ## 🔹 FASE 8 — main.py
 
 ```python

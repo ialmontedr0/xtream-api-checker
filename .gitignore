@@ -1,2 +1,26 @@
+# Sensible
 .env
-/venv
+*.key
+*.pem
+*.cert
+secrets.*
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+*.whl
+*.so
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
